@@ -14,20 +14,11 @@
       align-items: center;
       justify-content: center;
       padding: 1rem;
+      position: relative;
+      overflow: hidden;
     }
 
-    /* CAJA BLANCA */
-    .container {
-      background: white;
-      border-radius: 15px;
-      padding: 1.5rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      max-width: 90%;       /* deja márgenes para ver corazones */
-      position: relative;   
-      overflow: hidden;     /* recorta corazones que salgan mucho */
-    }
-
-    /* CORAZONES DENTRO DEL CONTAINER */
+    /* CORAZONES EN EL FONDO (AHORA EN body) */
     .heart {
       position: absolute;
       width: 15px; height: 15px;
@@ -35,7 +26,7 @@
       transform: rotate(-45deg);
       opacity: 0.8;
       pointer-events: none;
-      z-index: 1;           /* detrás de todo el contenido */
+      z-index: 1;
       animation: floatUp 4s linear infinite;
     }
     .heart::before, .heart::after {
@@ -49,13 +40,23 @@
     .heart::after  { left: 7.5px; top: 0 }
     @keyframes floatUp {
       0%   { transform: translateY(0) rotate(-45deg); opacity: 0.8 }
-      100% { transform: translateY(-200px) rotate(-45deg); opacity: 0 }
+      100% { transform: translateY(-300px) rotate(-45deg); opacity: 0 }
     }
 
-    /* CONTENIDO SOBRE LOS CORAZONES */
-    .wrapper {
+    /* CUADRO BLANCO SOBRE LOS CORAZONES */
+    .container {
+      background: white;
+      border-radius: 15px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 90%;
+      width: 100%;
       position: relative;
       z-index: 2;
+    }
+
+    /* CONTENIDO DEL CUADRO */
+    .wrapper {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -114,12 +115,13 @@
 
     #response {
       display: none;
+      margin-top: 0.8rem;
     }
     #response p {
       font-size: 1.1rem;
       color: #d81b60;
-      margin-top: 0.8rem;
       animation: pop 0.8s ease-out infinite alternate;
+      margin: 0.4rem 0;
     }
 
     /* ADAPTACIONES MÓVIL */
@@ -153,56 +155,56 @@
         </div>
         <div id="response">
           <p>Te amo mucho, Pui ❤️</p>
+          <p><em>P.S.: ¿Qué estás almorzando, Pui?</em></p>
         </div>
       </div>
       <img src="derecha.png" alt="Derecha" class="side-image right">
     </div>
-    <!-- Los corazones se generarán aquí -->
   </div>
 
   <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const container = document.querySelector('.container');
-    // Genera corazones cada 300ms dentro del container
-    function createHeart() {
-      const heart = document.createElement('div');
-      heart.className = 'heart';
-      heart.style.left = Math.random() * (container.clientWidth - 15) + 'px';
-      heart.style.top  = container.clientHeight + 'px';
-      heart.style.animationDuration = (3 + Math.random() * 2) + 's';
-      container.appendChild(heart);
-      setTimeout(() => heart.remove(), 4000);
-    }
-    setInterval(createHeart, 300);
+    document.addEventListener('DOMContentLoaded', function() {
+      // CORAZONES en body
+      function createHeart() {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.style.left = Math.random() * window.innerWidth + 'px';
+        heart.style.animationDuration = (3 + Math.random() * 2) + 's';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 4000);
+      }
+      setInterval(createHeart, 300);
 
-    const yesBtn = document.getElementById('yes');
-    const noBtn  = document.getElementById('no');
-    const qDiv   = document.getElementById('question');
-    const resp   = document.getElementById('response');
+      // Lógica de botones
+      const yesBtn = document.getElementById('yes');
+      const noBtn  = document.getElementById('no');
+      const qDiv   = document.getElementById('question');
+      const resp   = document.getElementById('response');
 
-    function handleYes(e) {
-      e.preventDefault();
-      qDiv.style.display = 'none';
-      resp.style.display = 'block';
-    }
-    yesBtn.addEventListener('click', handleYes);
-    yesBtn.addEventListener('touchstart', handleYes);
+      function handleYes(e) {
+        e.preventDefault();
+        qDiv.style.display = 'none';
+        resp.style.display = 'block';
+      }
+      yesBtn.addEventListener('click', handleYes);
+      yesBtn.addEventListener('touchstart', handleYes);
 
-    function moveNo(e) {
-      e.preventDefault();
-      const qr = qDiv.getBoundingClientRect();
-      const br = noBtn.getBoundingClientRect();
-      const maxX = qr.width  - br.width;
-      const maxY = qr.height - br.height;
-      noBtn.style.left = Math.random() * maxX + 'px';
-      noBtn.style.top  = Math.random() * maxY + 'px';
-    }
-    noBtn.addEventListener('mouseover', moveNo);
-    noBtn.addEventListener('touchstart', moveNo);
-  });
+      function moveNo(e) {
+        e.preventDefault();
+        const qr = qDiv.getBoundingClientRect();
+        const br = noBtn.getBoundingClientRect();
+        const maxX = qr.width  - br.width;
+        const maxY = qr.height - br.height;
+        noBtn.style.left = Math.random() * maxX + 'px';
+        noBtn.style.top  = Math.random() * maxY + 'px';
+      }
+      noBtn.addEventListener('mouseover', moveNo);
+      noBtn.addEventListener('touchstart', moveNo);
+    });
   </script>
 </body>
 </html>
+
 
 
 
